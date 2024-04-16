@@ -21,6 +21,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class HelloApplication extends Application {
     @Override
@@ -98,24 +99,42 @@ public class HelloApplication extends Application {
         btnShow.setOnMouseExited(release);
         grid.add(btnShow, 2,2);
 
+        Button btnRegister = new Button("Register");
+        btnRegister.setFont(Font.font(40));
+        grid.add(btnRegister, 0, 3, 2, 1);
+
         Button btnLogin = new Button("Log In");
         btnLogin.setFont(Font.font(40));
-        grid.add(btnLogin, 0, 3, 2, 1);
+        grid.add(btnLogin, 0, 4, 2, 1);
+
+        btnRegister.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+            }
+        });
 
         btnLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("Hello");
-                try {
-                    Parent p = FXMLLoader.load(getClass().getResource("homepage.fxml"));
-                    Scene s = new Scene(p);
-                    stage.setScene(s);
-                    stage.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                HelloController hc = new HelloController();
+                String name = tfUsername.getText();
+                String password = pfPassword.getText();
+                boolean loggedIn = hc.readData(name,password);
+                if(loggedIn){
+                    try {
+                        Parent p = FXMLLoader.load(getClass().getResource("homepage.fxml"));
+                        Scene s = new Scene(p);
+                        stage.setScene(s);
+                        stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
+
+
 
         Scene scene = new Scene(grid, 700, 500, Color.BLACK);
         stage.setScene(scene);
