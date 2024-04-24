@@ -1,1 +1,1 @@
-mana diay ni
+mana mana
