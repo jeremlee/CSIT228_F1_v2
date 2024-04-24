@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class HomeController {
@@ -22,6 +23,7 @@ public class HomeController {
     public TextField tfChangePassword;
     public Button btnChangePassword;
     public Button btnDelete;
+    public Button btnTodoList;
 
     private Stage stage;
     protected User user;
@@ -35,12 +37,14 @@ public class HomeController {
     protected void onChangeUsernameClick() {
         try(Connection conn = MySQLConnection.getConnection();
             PreparedStatement statement = conn.prepareStatement("UPDATE tbluser SET username = ? WHERE uid = ?")){
+            conn.setAutoCommit(false);
             String newName = tfChangeUsername.getText();
             user.username = newName;
             statement.setString(1,newName);
             statement.setInt(2,user.uid);
             statement.executeUpdate();
             System.out.println(user);
+            conn.commit();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -50,12 +54,14 @@ public class HomeController {
     protected void onChangePasswordClick(){
         try(Connection conn = MySQLConnection.getConnection();
             PreparedStatement statement = conn.prepareStatement("UPDATE tbluser SET password = ? WHERE uid = ?")){
+            conn.setAutoCommit(false);
             String newPassword = tfChangePassword.getText();
             user.password = newPassword;
             statement.setString(1,newPassword);
             statement.setInt(2,user.uid);
             statement.executeUpdate();
             System.out.println(user);
+            conn.commit();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -64,6 +70,7 @@ public class HomeController {
     protected void onDeleteClick(){
         try(Connection conn = MySQLConnection.getConnection();
             PreparedStatement statement = conn.prepareStatement("DELETE from tbluser WHERE uid = ?")){
+            conn.setAutoCommit(false);
             statement.setInt(1,user.uid);
             statement.executeUpdate();
             user.username = "";
@@ -71,6 +78,7 @@ public class HomeController {
             user.uid = -1;
             System.out.println("Deleted");
             System.out.println(user);
+            conn.commit();
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("login-view.fxml"));
                 Parent p = loader.load();
@@ -87,5 +95,24 @@ public class HomeController {
             e.printStackTrace();
         }
     }
+    @FXML
+    protected void onToDoListClick(){
+        try(Connection conn = MySQLConnection.getConnection();
+        PreparedStatement statement = conn.prepareStatement("SELECT * from tbltask WHERE uid = ?")){
+        statement.setInt(1,user.uid);
+        ResultSet rs = statement.executeQuery();
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("task.fxml"));
+        Parent p = loader.load();
+        TaskController controller = loader.getController();
+        controller.setStage(stage);
+        controller.setUser(user);
+        controller.setResultSet(rs);
+        Scene s = new Scene(p);
+        stage.setScene(s);
+        stage.show();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="543.0" prefWidth="658.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csit228_f1_v2.TaskController">
+   <children>
+      <TableView fx:id="tblvTasks" layoutX="25.0" layoutY="161.0" prefHeight="278.0" prefWidth="608.0">
+        <columns>
+          <TableColumn fx:id="colTaskId" prefWidth="75.0" text="task_id" />
+          <TableColumn fx:id="colContent" prefWidth="75.0" text="content" />
+            <TableColumn fx:id="colEdit" prefWidth="75.0" text="Edit" />
+            <TableColumn fx:id="colBtnEdit" prefWidth="75.0" text="." />
+            <TableColumn fx:id="colBtnDelete" prefWidth="105.199951171875" text="delete" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <HBox alignment="CENTER" layoutX="69.0" layoutY="31.0" prefHeight="100.0" prefWidth="534.0">
+         <children>
+            <TextField fx:id="tfNewTask" promptText="Enter new task here" />
+            <Button fx:id="btnAddNewTask" mnemonicParsing="false" onAction="#onBtnAddNewTaskClick" text="Add" />
+            <Label prefHeight="66.0" prefWidth="378.0" text="Press edit textfield, press enter,press edit btn" textFill="WHITE" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

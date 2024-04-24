@@ -13,8 +13,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.*;
-import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class HelloController {
     public GridPane pnLogin;
@@ -45,10 +47,11 @@ public class HelloController {
     }
 
     @FXML
-    protected void insertData(String name, String password) throws IOException{
+    protected void insertData(String name, String password) {
         try(Connection conn = MySQLConnection.getConnection();
             PreparedStatement statement = conn.prepareStatement("INSERT INTO tbluser(username,password) VALUES(?,?)");
             PreparedStatement statement2 = conn.prepareStatement("SELECT uid FROM tbluser WHERE username = ?")){
+            conn.setAutoCommit(false);
             statement.setString(1,name);
             statement.setString(2,password);
             statement.executeUpdate();
@@ -63,6 +66,7 @@ public class HelloController {
                 throw new SQLException();
             }
             System.out.println(user);
+            conn.commit();
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -126,7 +130,7 @@ public class HelloController {
         }
     }
     @FXML
-    protected void onRegister() throws IOException {
+    protected void onRegister() {
         String name = tfUsername.getText();
         String password = tfPassword.getText();
         insertData(name,password);

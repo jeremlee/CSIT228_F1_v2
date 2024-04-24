@@ -12,7 +12,7 @@ public class HelloApplication extends Application {
     protected User user;
 
     @Override
-    public void start(Stage stage) throws IOException, SQLException {
+    public void start(Stage stage) {
         user = new User();
         String createStatement = "CREATE TABLE IF NOT EXISTS tbluser ("
                 + "uid INT AUTO_INCREMENT PRIMARY KEY,"
@@ -22,6 +22,18 @@ public class HelloApplication extends Application {
         try(Connection conn = MySQLConnection.getConnection();
             Statement statement = conn.createStatement()){
             statement.executeUpdate(createStatement);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        String createStatement2 = "CREATE TABLE IF NOT EXISTS tbltask ( " +
+                "task_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                "uid INT, " +
+                "content VARCHAR(255), " +
+                "CONSTRAINT fk_uid FOREIGN KEY (uid) REFERENCES tbluser(uid) ON UPDATE CASCADE ON DELETE CASCADE " +
+                ")";
+        try(Connection conn = MySQLConnection.getConnection();
+            Statement statement = conn.createStatement()){
+            statement.executeUpdate(createStatement2);
         }catch(SQLException e){
             e.printStackTrace();
         }
